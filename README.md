@@ -61,7 +61,7 @@ public void loadQuestions(MultipartFile file) {
 ```
 ## Fluxo do Front
 
-### Upload CSV
+### Subir arquivo CSV
 ```html
 POST /api/game/load
 Recebe: MultipartFile csv
