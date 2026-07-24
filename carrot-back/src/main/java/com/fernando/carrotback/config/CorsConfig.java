@@ -14,10 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
-                                "http://localhost:3000", // Porta padrão do React
-                                "http://localhost:5173"
-                        )
+                        .allowedOrigins("*")
                         .allowedMethods(
                                 "GET",
                                 "POST",
@@ -25,7 +22,7 @@ public class CorsConfig {
                                 "DELETE",
                                 "OPTIONS"
                         )
-                        .allowedHeaders("")
+                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };

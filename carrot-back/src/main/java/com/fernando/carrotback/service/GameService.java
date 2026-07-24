@@ -7,7 +7,7 @@ import com.fernando.carrotback.domain.entity.Game;
 import com.fernando.carrotback.domain.entity.Player;
 import com.fernando.carrotback.domain.entity.PlayerAnswer;
 import com.fernando.carrotback.domain.entity.Question;
-import com.fernando.carrotback.domain.repository.GameSessionRepository;
+import com.fernando.carrotback.domain.repository.GameRepository;
 import com.fernando.carrotback.domain.repository.PlayerAnswerRepository;
 import com.fernando.carrotback.domain.repository.PlayerRepository;
 import com.fernando.carrotback.domain.repository.QuestionRepository;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GameService {
 
-    private final GameSessionRepository repository;
+    private final GameRepository repository;
     private final QuestionRepository questionRepository;
     private final PlayerRepository playerRepository;
     private final PlayerAnswerRepository playerAnswerRepository;

@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: 
+    linear-gradient(
+      135deg, 
+      #5b21b6 0%, 
+      #7c3aed, 
+      #9333ea 100%
+    );  
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 60px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  width: 100%;
+}
+
+.hero-card button {
+  border-radius: 15px;
+}

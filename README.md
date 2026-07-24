@@ -1,5 +1,29 @@
-# Carrot
-Cenoura? Não isso é um primo pobre, Open Source, FontOpen do Kahoot, com o básico que todo professor precisa para instruir divertidamente seus alunos.
+# 🥕 Carrot
+Cenoura? Não isso é um primo pobre, *Open Source*, *Font-Open* do **Kahoot**, com o básico que todo professor precisa para instruir divertidamente seus alunos.
+
+Uma aplicação muito próxima do "Kahoot", com QRCode, ranking em tempo real, cronômetro e múltiplos jogadores, sem depender de serviços externos. Essa arquitetura é simples e suficiente para dezenas ou até centenas de participantes.
+
+## Tecnologias Usadas
+
+### Backend
+- Java 21 com Spring Boot
+	- Spring Web
+	- Spring WebSocket (tempo real)
+	- Spring Data JPA
+	- H2 Database
+	- Validation
+	- Lombok
+- Banco H2
+- JPA/Hibernate
+
+### Frontend
+- React.js com Vite
+	- react-router-dom
+	- STOMP (Para comunicação em tempo real com Spring WebSocket)
+	- axios (Cliente HTTP)
+	- qrcode.react (exibir o QR Code de entrada dos jogadores)
+- HTML
+- CSS (Bootstrap 5)
 
 Projeto ainda em Construção
 
@@ -17,14 +41,15 @@ Projeto ainda em Construção
 - [x] Verificar se terminou o jogo
 
 ### Fase 2
+- [x] Criar a estrutura do Projeto Front
+- [x] Criar conexão com o Websocket
+- [ ] Testar envios de mensagens pelo Websocket e Stomp
 - [ ] Importar perguntas
-- [ ] Criar a estrutura do Projeto Front
-- [ ] Entrar na sessão
-- [ ] Sala de espera
-- [ ] QRCode
+- [ ] Gerar o QRCode inicial
 
 ### Fase 3
-- [ ] Websocket
+- [ ] Entrar na sessão
+- [ ] Sala de espera
 - [ ] Iniciar o jogo pelo Front
 - [ ] Enviar a pergunta pelo Front
 - [ ] Receber a resposta pelo Front

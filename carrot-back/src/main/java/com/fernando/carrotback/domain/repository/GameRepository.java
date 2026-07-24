@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface GameSessionRepository extends JpaRepository<Game, Long> {
+public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByPin(String pin);
 }
