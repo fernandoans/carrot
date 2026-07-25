@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Client } from '@stomp/stompjs';
 import { WS_URL } from '../config/config.js';
+import { useGame } from './GameContext';
 
 const WebSocketContext = createContext(null);
 
 export const WebSocketProvider = ({ children }) => {
 
+  const game = useGame();
   const [client, setClient] = useState(null);
   const [connected, setConnected] = useState(false);
 
@@ -15,8 +17,40 @@ export const WebSocketProvider = ({ children }) => {
       reconnectDelay: 5000
     });
 
-    stompClient.onConnect = () => {
+    stompClient.onConnect = (message) => {
       console.log('WebSocket conectado!');
+      stompClient.subscribe("/topic/game", (message) => {
+        const event = JSON.parse(message.body);
+        switch (event.type) {
+          case 'TEST':
+            game?.setGameStatus("WAITING");
+            console.log(event.type, "-", event.content);
+            break;
+          case 'GAME_WAITING':
+            game?.setGameStatus("WAITING");
+            //setJoinSeconds(event.payload.joinSeconds);
+            break;
+          case 'PLAYER_JOINED':
+            console.log('Jogador entrou:', event.content);
+            break;
+          case 'QUESTION_STARTED':
+            game?.setGameStatus("QUESTION");
+            //setCurrentQuestion(event.payload);
+            break;
+          case 'QUESTION_ENDED':
+            console.log('Pergunta encerrada:', event.content);
+            break;
+          case 'RANKING_UPDATED':
+            game?.setGameStatus("RANKING");
+            //setRanking(event.payload);
+            break;
+          case 'GAME_FINISHED':
+            game?.setGameStatus("FINISHED");
+            break;
+          default:
+            console.log('Evento desconhecido:', event);
+        }     
+      });
       setConnected(true);
     };
 

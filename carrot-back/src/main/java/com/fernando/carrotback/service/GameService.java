@@ -30,7 +30,7 @@ public class GameService {
     private final PlayerAnswerRepository playerAnswerRepository;
 
     public ResponseGameDTO startGame(String titulo) {
-        Long totalQuestoes = questionRepository.count();
+        long totalQuestoes = questionRepository.count();
         if (totalQuestoes == 0) {
             throw new NoSuchElementException("Não foi encontrada questão disponível");
         }
@@ -41,7 +41,7 @@ public class GameService {
         entity.setFinished(false);
         entity.setActualQuestion(1L);
         entity.setTotalQuestions(totalQuestoes);
-        entity.setStatus(GameStatus.WAITING);
+        entity.setStatus(GameStatus.GAME_WAITING);
         return this.toResponse(repository.save(entity));
     }
 
@@ -60,7 +60,7 @@ public class GameService {
         Game entity = repository.findAll().stream().findFirst()
           .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
         entity.setActualQuestion(entity.getActualQuestion() + 1);
-        entity.setStatus(GameStatus.QUESTION_FINISH);
+        entity.setStatus(GameStatus.QUESTION_ENDED);
         this.toResponse(repository.save(entity));
         // Atualizar scores dos jogadores
         actualScores();
@@ -81,7 +81,7 @@ public class GameService {
           entity.getId(),
           entity.getTitle(),
           entity.getPin(),
-          entity.getStatus().getNome()
+          entity.getStatus().getMensagem()
         );
     }
 

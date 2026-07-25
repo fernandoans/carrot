@@ -43,9 +43,10 @@ Projeto ainda em Construção
 ### Fase 2
 - [x] Criar a estrutura do Projeto Front
 - [x] Criar conexão com o Websocket
-- [ ] Testar envios de mensagens pelo Websocket e Stomp
+- [x] Criar Dockerfile para Back/Front
+- [x] Testar envios de mensagens pelo Websocket e Stomp
+- [x] Enviar mensagem para gerar o QRCode inicial
 - [ ] Importar perguntas
-- [ ] Gerar o QRCode inicial
 
 ### Fase 3
 - [ ] Entrar na sessão
@@ -60,6 +61,43 @@ Projeto ainda em Construção
 - [ ] Tela de Ranking
 - [ ] Tela de Encerramento
 - [ ] Exportar os resultados para CSV
+
+## Baixar o projeto
+
+Se desejar testar o projeto basta baixá-lo, no front criar na pasta raiz um arquivo chamado .env com a seguinte variável:
+
+VITE_BACKEND_PORT=[porta do Back]
+
+## Testes a executar
+
+### Verificar envio correto da comunicação WS -> Stomp
+
+```
+Spring Boot
+  ↓
+WebSocket - STOMP
+  ↓
+React
+  ↓
+SimpleBroker
+  ↓
+/topic/game
+```
+
+1. Iniciar o backend.
+2. Iniciar o frontend.
+3. No navegador, abrir o frontend no endereço: http://localhost:5173 veremos a tela inicial.
+4. No console deve aparecer: WebSocket conectado!
+5. No navegador, em uma nova aba, enviar a mensagem de teste: http://localhost:8080/test/send
+6. Deve mostrar na página: Mensagem Enviada!
+7. No console deve aparecer: TEST - Testar a conexão e a tela do front mudar para a tela com QRCode.
+
+E validamos: <br/>
+✅ Conexão WebSocket <br/>
+✅ Handshake STOMP <br/>
+✅ Subscribe <br/>
+✅ Envio de mensagem do backend <br/> 
+✅ Recebimento da mensagem no frontend
 
 ### Importação do Arquivo
 
