@@ -22,5 +22,5 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameStatus status;
     private Long actualQuestion;
-    private Long totalQuestions;
+    private Integer totalQuestions;
 }

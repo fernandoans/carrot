@@ -46,17 +46,16 @@ Projeto ainda em Construção
 - [x] Criar Dockerfile para Back/Front
 - [x] Testar envios de mensagens pelo Websocket e Stomp
 - [x] Enviar mensagem para gerar o QRCode inicial
-- [ ] Importar perguntas
+- [x] Importar perguntas
 
 ### Fase 3
+- [ ] Ativar o Cronômetros
 - [ ] Entrar na sessão
-- [ ] Sala de espera
-- [ ] Iniciar o jogo pelo Front
-- [ ] Enviar a pergunta pelo Front
-- [ ] Receber a resposta pelo Front
+- [ ] Receber e mostrar a pergunta
+- [ ] Enviar a resposta do Aluno/Front
+- [ ] Mostrar resultado atual (Ranking)
 
 ### Fase 4
-- [ ] Cronômetro
 - [ ] Tela de Pontuação
 - [ ] Tela de Ranking
 - [ ] Tela de Encerramento
@@ -109,30 +108,24 @@ ordem;pergunta;a;b;c;d;correta;tempo
 2;2 + 2?;3;4;5;6;2;15
 3;Java é?;Banco;Linguagem;Sistema;Framework;2;20
 ```
-Fluxo
 
-```java
-import org.springframework.web.multipart.MultipartFile;
+A. Fluxo da Ação no Front
 
-public void loadQuestions(MultipartFile file) {
-  gameRepository.deleteAll();
-  playerAnswerRepository.deleteAll();
-  questionRepository.deleteAll();
-  playerRepository.deleteAll();
-  loadCSV(file);
-}
-```
-## Fluxo do Front
+Professor -> Enviar o arquivo -> Limpa o banco e grava questões e jogo -> Envia mensagem
+Alunos    -> Muda a tela de Entrada para aguardando Jogadores 
 
-### Subir arquivo CSV
+B. Fluxo da Ação no Front
+
 ```html
-POST /api/game/load
+POST /api/game/upload-file
 Recebe: MultipartFile csv
 ```
 Responsabilidades:
 1. Limpar banco
 2. Ler CSV
-3. Persistir perguntasa
+3. Persistir perguntas
+4. Persistir jogo
+5. Enviar mensagem de aguardando início
 
 ### Entrar no Jogo
 ```html
@@ -142,11 +135,6 @@ POST /api/player
 ### Listar jogadores
 ```html
 GET /api/player/all
-```
-
-### Iniciar jogo
-```html
-POST /api/game/start
 ```
 
 ### Abrir pergunta

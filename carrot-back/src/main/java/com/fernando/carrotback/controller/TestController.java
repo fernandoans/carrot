@@ -22,7 +22,8 @@ public class TestController {
           "/topic/game",
           new ResponseMessageDTO(
             GameStatus.TEST.toString(),
-            GameStatus.TEST.getMensagem()
+            GameStatus.TEST.getMensagem(),
+            60
           )
         );
         return ResponseEntity.ok("Mensagem Enviada!");

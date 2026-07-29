@@ -1,14 +1,13 @@
 package com.fernando.carrotback.controller;
 
-import com.fernando.carrotback.domain.dto.RequestCreateGameDTO;
-import com.fernando.carrotback.domain.dto.ResponseGameDTO;
-import com.fernando.carrotback.domain.dto.ResponseQuestionDTO;
-import com.fernando.carrotback.domain.dto.ResponseRankingDTO;
+import com.fernando.carrotback.domain.dto.*;
+import com.fernando.carrotback.enums.GameStatus;
 import com.fernando.carrotback.service.GameService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,10 +17,24 @@ import java.util.List;
 public class GameController {
 
     private final GameService service;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping("/start")
-    public ResponseEntity<ResponseGameDTO> startGame(@RequestBody @Valid RequestCreateGameDTO request) {
-        return ResponseEntity.ofNullable(service.startGame(request.titulo()));
+    @PostMapping("/upload-file")
+    public ResponseEntity<String> uploadCsv(
+      @RequestParam("file") MultipartFile file
+    ) {
+        int totQuestoes = service.processFileCsv(file);
+        if (totQuestoes > 0) {
+            messagingTemplate.convertAndSend(
+              "/topic/game",
+              new ResponseMessageDTO(
+                GameStatus.GAME_WAITING.toString(),
+                GameStatus.GAME_WAITING.getMensagem(),
+                60*5 // 5 minutos
+              )
+            );
+        }
+        return ResponseEntity.ok("Arquivo carregado com " + totQuestoes + " questões.");
     }
 
     @GetMapping("/open-question")
