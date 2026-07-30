@@ -1,7 +1,7 @@
-package com.fernando.carrotback.controller;
+package com.fernando.carrotback.presentation.controller;
 
-import com.fernando.carrotback.domain.dto.ResponseMessageDTO;
-import com.fernando.carrotback.enums.GameStatus;
+import com.fernando.carrotback.presentation.dto.ResponseMessageDTO;
+import com.fernando.carrotback.infrastructure.enums.GameStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

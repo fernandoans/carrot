@@ -1,9 +1,9 @@
-package com.fernando.carrotback.controller;
+package com.fernando.carrotback.presentation.controller;
 
-import com.fernando.carrotback.domain.dto.RequestAnswerDTO;
-import com.fernando.carrotback.domain.dto.RequestPlayerDTO;
-import com.fernando.carrotback.domain.dto.ResponsePlayerDTO;
-import com.fernando.carrotback.service.PlayerService;
+import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
+import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
+import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
+import com.fernando.carrotback.application.service.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +30,6 @@ public class PlayerController {
 
     @PostMapping("/answer")
     public ResponseEntity<Boolean> sendAwnser(@RequestBody @Valid RequestAnswerDTO request) {
-        return ResponseEntity.ofNullable(service.sendAwnser(request));
+        return ResponseEntity.ofNullable(service.sendAnswer(request));
     }
 }

@@ -1,4 +1,4 @@
-package com.fernando.carrotback.domain.entity;
+package com.fernando.carrotback.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PlayerAnswer {
     @Id
     private Long idPlayer;
+
     private Long idQuestion;
     private Byte answer;
     private Integer timeAnswerInSeconds;

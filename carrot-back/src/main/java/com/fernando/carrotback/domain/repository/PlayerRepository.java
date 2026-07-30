@@ -1,6 +1,6 @@
 package com.fernando.carrotback.domain.repository;
 
-import com.fernando.carrotback.domain.entity.Player;
+import com.fernando.carrotback.domain.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

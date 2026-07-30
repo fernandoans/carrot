@@ -1,4 +1,4 @@
-package com.fernando.carrotback.domain.entity;
+package com.fernando.carrotback.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

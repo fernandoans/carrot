@@ -1,4 +1,4 @@
-package com.fernando.carrotback.domain.entity;
+package com.fernando.carrotback.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Question {
     @Id
-    private Long ordem;
+    private Long order;
 
     private String description;
     private String answer1;

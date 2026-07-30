@@ -1,17 +1,16 @@
-package com.fernando.carrotback.service;
+package com.fernando.carrotback.application.service;
 
-import com.fernando.carrotback.presentation.dto.ResponseGameDTO;
 import com.fernando.carrotback.presentation.dto.ResponseQuestionDTO;
 import com.fernando.carrotback.presentation.dto.ResponseRankingDTO;
-import com.fernando.carrotback.domain.entity.Game;
-import com.fernando.carrotback.domain.entity.Player;
-import com.fernando.carrotback.domain.entity.PlayerAnswer;
-import com.fernando.carrotback.domain.entity.Question;
+import com.fernando.carrotback.domain.model.Game;
+import com.fernando.carrotback.domain.model.Player;
+import com.fernando.carrotback.domain.model.PlayerAnswer;
+import com.fernando.carrotback.domain.model.Question;
 import com.fernando.carrotback.domain.repository.GameRepository;
 import com.fernando.carrotback.domain.repository.PlayerAnswerRepository;
 import com.fernando.carrotback.domain.repository.PlayerRepository;
 import com.fernando.carrotback.domain.repository.QuestionRepository;
-import com.fernando.carrotback.enums.GameStatus;
+import com.fernando.carrotback.infrastructure.enums.GameStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,41 +32,12 @@ public class GameService {
     private final QuestionRepository questionRepository;
     private final PlayerRepository playerRepository;
     private final PlayerAnswerRepository playerAnswerRepository;
-
-    public ResponseQuestionDTO openQuestion() {
-        Game entity = repository.findAll().stream().findFirst()
-          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
-        entity.setStarted(true);
-        entity.setStatus(GameStatus.QUESTION_STARTED);
-        Question question = questionRepository.findById(entity.getActualQuestion())
-          .orElseThrow(() -> new NoSuchElementException("Questão não encontrada, verifique os dados!"));
-        this.toResponse(repository.save(entity));
-        return toResponse(question);
-    }
-
-    public List<ResponseRankingDTO> finishQuestion() {
-        Game entity = repository.findAll().stream().findFirst()
-          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
-        entity.setActualQuestion(entity.getActualQuestion() + 1);
-        entity.setStatus(GameStatus.QUESTION_ENDED);
-        this.toResponse(repository.save(entity));
-        // Atualizar scores dos jogadores
-        actualScores();
-        return playerRepository.findTop20ByOrderByScoreDesc()
-          .stream()
-          .map(this::toResponse)
-          .toList();
-    }
-
-    public Boolean isFinished() {
-        Game entity = repository.findAll().stream().findFirst()
-          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
-        return (entity.getActualQuestion() >= entity.getTotalQuestions());
-    }
+    // Ciclo de Vida
+    private final GameTimeService timeService;
 
     @Transactional
     public int processFileCsv(MultipartFile file) {
-        int totalQuestoes = 0;
+        int totQuestoes = 0;
         String nome = this.validarArquivo(file);
         // Limpar toda a base
         clearDatabase();
@@ -78,17 +47,42 @@ public class GameService {
             String linha = reader.readLine(); // Retira a linha do cabeçalho
             while ((linha = reader.readLine()) != null) {
                 saveQuestion(linha.split(";"));
-                totalQuestoes++;
+                totQuestoes++;
             }
         } catch (IOException e) {
             throw new RuntimeException("Erro ao processar o arquivo!", e);
         }
         // Carregar o Game
-        if (totalQuestoes == 0) {
+        if (totQuestoes == 0) {
             throw new RuntimeException("Nenhuma questão processada, verifique o arquivo!");
         }
-        this.startGame(nome, totalQuestoes);
-        return totalQuestoes;
+        this.startGame(nome, totQuestoes);
+        cycleWaiting();
+        return totQuestoes;
+    }
+
+    public ResponseQuestionDTO getQuestion(boolean atualiza) {
+        Game game = repository.findAll().stream().findFirst()
+          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
+        Question question = questionRepository.findById(game.getActualQuestion())
+          .orElseThrow(() -> new NoSuchElementException("Questão não encontrada, verifique os dados!"));
+        if (atualiza) {
+            game.setActualQuestion(game.getActualQuestion() + 1);
+            repository.save(game);
+        }
+        return ResponseQuestionDTO.toResponse(question);
+    }
+
+    public List<ResponseRankingDTO> getRanking() {
+        Game entity = repository.findAll().stream().findFirst()
+          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
+        repository.save(entity);
+        // Atualizar scores dos jogadores
+        actualScores();
+        return playerRepository.findTop20ByOrderByScoreDesc()
+          .stream()
+          .map(ResponseRankingDTO::toResponse)
+          .toList();
     }
 
     private void clearDatabase() {
@@ -101,7 +95,7 @@ public class GameService {
     private void saveQuestion(String [] colunas) {
         if (colunas.length == 8) {
             Question question = new Question();
-            question.setOrdem(Long.parseLong(colunas[0]));
+            question.setOrder(Long.parseLong(colunas[0]));
             question.setDescription(colunas[1]);
             question.setAnswer1(colunas[2]);
             question.setAnswer2(colunas[3]);
@@ -114,20 +108,11 @@ public class GameService {
     }
 
     private void startGame(String titulo, Integer totalQuestoes) {
-        try {
-            Game entity = new Game();
-            entity.setTitle(titulo);
-            entity.setPin(this.gerarPin());
-            entity.setStarted(true);
-            entity.setFinished(false);
-            entity.setTotalQuestions(totalQuestoes);
-            entity.setStatus(GameStatus.GAME_WAITING);
-            entity.setActualQuestion(0L);
-            repository.save(entity);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex;
-        }
+        Game entity = new Game();
+        entity.setTitle(titulo);
+        entity.setTotalQuestions(totalQuestoes);
+        entity.setActualQuestion(1L);
+        repository.save(entity);
     }
 
     private String validarArquivo(MultipartFile file) {
@@ -139,40 +124,6 @@ public class GameService {
             throw new IllegalArgumentException("O arquivo informado deve ser CSV.");
         }
         return nome;
-    }
-
-    private ResponseGameDTO toResponse(Game entity) {
-        return new ResponseGameDTO(
-          entity.getId(),
-          entity.getTitle(),
-          entity.getPin(),
-          entity.getStatus().getMensagem()
-        );
-    }
-
-    private ResponseQuestionDTO toResponse(Question entity) {
-        return new ResponseQuestionDTO(
-          entity.getDescription(),
-          entity.getAnswer1(),
-          entity.getAnswer2(),
-          entity.getAnswer3(),
-          entity.getAnswer4(),
-          entity.getTimeInSeconds(),
-          entity.getCorrectAnswer()
-        );
-    }
-
-    private ResponseRankingDTO toResponse(Player entity) {
-        return new ResponseRankingDTO(
-          entity.getNickname(),
-          entity.getScore()
-        );
-    }
-
-    private String gerarPin() {
-        SecureRandom random = new SecureRandom();
-        return String.valueOf(
-          100000 + random.nextInt(900000));
     }
 
     private void actualScores() {
@@ -188,6 +139,42 @@ public class GameService {
             }
         }
         // Eliminar Respostas
-        playerAnswerRepository.deleteAll();
+        playerAnswerRepository.deleteAllInBatch();
+    }
+
+    private boolean isFinished() {
+        Game entity = repository.findAll().stream().findFirst()
+          .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
+        return (entity.getActualQuestion() >= entity.getTotalQuestions());
+    }
+
+    // -----------------------------------------------------
+    // CICLO DE VIDA
+    // -----------------------------------------------------
+
+    private void cycleWaiting() {
+        timeService.notifyAction(30, GameStatus.GAME_WAITING);
+        timeService.startTimer(30, this::cycleOpenQuestion);
+    }
+
+    private void cycleOpenQuestion() {
+        ResponseQuestionDTO questao = getQuestion(true);
+        if (questao != null) {
+            timeService.notifyAction(questao.tempoEmSegundos(), GameStatus.QUESTION_STARTED);
+            timeService.startTimer(questao.tempoEmSegundos(), this::cyclefinishQuestion);
+        }
+    }
+
+    private void cyclefinishQuestion() {
+        timeService.startTimer(30, this::nextStep);
+        timeService.notifyAction(30, GameStatus.SHOW_RANKING);
+    }
+
+    private void nextStep() {
+        if (this.isFinished()) {
+            timeService.notifyAction(0, GameStatus.GAME_FINISHED);
+        } else {
+            cycleOpenQuestion();
+        }
     }
 }

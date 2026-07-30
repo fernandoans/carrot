@@ -35,17 +35,17 @@ export const WebSocketProvider = ({ children }) => {
             break;
           case 'QUESTION_STARTED':
             game?.setGameStatus("QUESTION");
+            console.log('Pergunta iniciada:', event.content);
             //setCurrentQuestion(event.payload);
             break;
-          case 'QUESTION_ENDED':
-            console.log('Pergunta encerrada:', event.content);
-            break;
-          case 'RANKING_UPDATED':
+          case 'SHOW_RANKING':
             game?.setGameStatus("RANKING");
+            console.log('Mostrar Ranking:', event.content);
             //setRanking(event.payload);
             break;
           case 'GAME_FINISHED':
             game?.setGameStatus("FINISHED");
+            console.log('Jogo finalizado:', event.content);
             break;
           default:
             console.log('Evento desconhecido:', event);

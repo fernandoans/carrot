@@ -1,4 +1,4 @@
-package com.fernando.carrotback.domain.dto;
+package com.fernando.carrotback.presentation.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

@@ -25,6 +25,22 @@ Uma aplicação muito próxima do "Kahoot", com QRCode, ranking em tempo real, c
 - HTML
 - CSS (Bootstrap 5)
 
+### Estrutura do Projeto
+
+A estrutura de pastas para o Backend/Frontend seguem o padrão Domain-Drive Design / Clean Architecture que propõe, para o Backend a divisão em 4 camadas definidas:
+
+- application (componentes e services)
+- domain (model e repository)
+- infrastructure (classes de apoio ao projeto)
+- presentation (controles e DTOs)
+
+Para o Frontend:
+
+- context
+- pages
+- routes
+- services
+
 Projeto ainda em Construção
 
 ## Tarefas a cumprir
@@ -49,27 +65,26 @@ Projeto ainda em Construção
 - [x] Importar perguntas
 
 ### Fase 3
-- [ ] Ativar o Cronômetros
-- [ ] Entrar na sessão
+- [x] Ativar o Cronômetro
+- [ ] Entrar no jogo
 - [ ] Receber e mostrar a pergunta
 - [ ] Enviar a resposta do Aluno/Front
 - [ ] Mostrar resultado atual (Ranking)
 
 ### Fase 4
 - [ ] Tela de Pontuação
-- [ ] Tela de Ranking
-- [ ] Tela de Encerramento
+- [ ] Tela do Ranking Final
 - [ ] Exportar os resultados para CSV
 
-## Baixar o projeto
+## Passos ao baixar o projeto
 
 Se desejar testar o projeto basta baixá-lo, no front criar na pasta raiz um arquivo chamado .env com a seguinte variável:
 
 VITE_BACKEND_PORT=[porta do Back]
 
-## Testes a executar
+### Testes a executar
 
-### Verificar envio correto da comunicação WS -> Stomp
+Verificar envio correto da comunicação WS -> Stomp
 
 ```
 Spring Boot
@@ -98,9 +113,9 @@ E validamos: <br/>
 ✅ Envio de mensagem do backend <br/> 
 ✅ Recebimento da mensagem no frontend
 
-### Importação do Arquivo
+### Importar o Arquivo
 
-Exemplo do Arquivo CSV para importar:
+Exemplo de um Arquivo CSV para importar:
 
 ```csv
 ordem;pergunta;a;b;c;d;correta;tempo
@@ -111,10 +126,14 @@ ordem;pergunta;a;b;c;d;correta;tempo
 
 A. Fluxo da Ação no Front
 
-Professor -> Enviar o arquivo -> Limpa o banco e grava questões e jogo -> Envia mensagem
-Alunos    -> Muda a tela de Entrada para aguardando Jogadores 
+Professor -> Acessar o Link: http://localhost:5173/admin/upload
+Professor -> Enviar o arquivo
 
-B. Fluxo da Ação no Front
+Na tela mostrar o Link: http://localhost:5173
+
+Tela dos Alunos -> Automaticamente modifica a tela de Entrada para aguardando Jogadores com o QRCode. 
+
+B. Fluxo da Ação no Back
 
 ```html
 POST /api/game/upload-file
@@ -126,6 +145,28 @@ Responsabilidades:
 3. Persistir perguntas
 4. Persistir jogo
 5. Enviar mensagem de aguardando início
+6. Iniciar o cronômetro
+
+### Cronômetro
+
+O jogo funciona na base de mensagens (WebSock-Stomp) e o "coração" está no cronômetro, consideremos que as mensagens seguem a seguinte ordem por tempo:
+```
+GAME_WAITING (Assim que for realizado o Download do Arquivo)
+  ↓ 5 mins para entrar
+QUESTION_STARTED
+  ↓ Tempo definido na questão
+SHOW_RANKING
+  ↓ 1 min para visualizar o Ranking
+QUESTION_STARTED
+  ↓ Tempo definido na questão
+SHOW_RANKING
+  ↓ 1 min para visualizar o Ranking
+ ...
+  ↓
+GAME_FINISHED
+```
+
+Serviço principal: GameTimeService
 
 ### Entrar no Jogo
 ```html

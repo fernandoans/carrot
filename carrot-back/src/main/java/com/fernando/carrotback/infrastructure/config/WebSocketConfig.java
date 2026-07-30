@@ -1,4 +1,4 @@
-package com.fernando.carrotback.config;
+package com.fernando.carrotback.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,10 +1,10 @@
-package com.fernando.carrotback.service;
+package com.fernando.carrotback.application.service;
 
 import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
 import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
 import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
-import com.fernando.carrotback.domain.entity.Player;
-import com.fernando.carrotback.domain.entity.PlayerAnswer;
+import com.fernando.carrotback.domain.model.Player;
+import com.fernando.carrotback.domain.model.PlayerAnswer;
 import com.fernando.carrotback.domain.repository.PlayerAnswerRepository;
 import com.fernando.carrotback.domain.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,34 +24,29 @@ public class PlayerService {
         Player entity = new Player();
         entity.setNickname(player.nome());
         entity.setScore(0);
-        return this.toResponse(repository.save(entity));
+        return ResponsePlayerDTO.toResponse(repository.save(entity));
     }
 
     public List<ResponsePlayerDTO> listar() {
         return repository.findAll()
           .stream()
-          .map(this::toResponse)
+          .map(ResponsePlayerDTO::toResponse)
           .toList();
     }
 
-    public Boolean sendAwnser(RequestAnswerDTO dto) {
+    public Boolean sendAnswer(RequestAnswerDTO dto) {
         Player entity = repository.findById(dto.idJogador())
           .orElseThrow(() -> new NoSuchElementException("Jogador não encontrado"));
-
-        PlayerAnswer answer = new PlayerAnswer();
-        answer.setIdPlayer(entity.getId());
-        answer.setAnswer(dto.resposta());
-        answer.setCorrect(dto.correta());
-        answer.setTimeAnswerInSeconds(dto.tempo());
-        playerAnswerRepository.save(answer);
-        return Boolean.TRUE;
-    }
-
-    private ResponsePlayerDTO toResponse(Player entity) {
-        return new ResponsePlayerDTO(
-          entity.getId(),
-          entity.getNickname(),
-          entity.getScore()
-        );
+        try {
+            PlayerAnswer answer = new PlayerAnswer();
+            answer.setIdPlayer(entity.getId());
+            answer.setAnswer(dto.resposta());
+            answer.setCorrect(dto.correta());
+            answer.setTimeAnswerInSeconds(dto.tempo());
+            playerAnswerRepository.save(answer);
+            return Boolean.TRUE;
+        } catch (IllegalArgumentException e) {
+            return Boolean.FALSE;
+        }
     }
 }
