@@ -1,8 +1,8 @@
 package com.fernando.carrotback.service;
 
-import com.fernando.carrotback.domain.dto.RequestAnswerDTO;
-import com.fernando.carrotback.domain.dto.RequestPlayerDTO;
-import com.fernando.carrotback.domain.dto.ResponsePlayerDTO;
+import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
+import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
+import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
 import com.fernando.carrotback.domain.entity.Player;
 import com.fernando.carrotback.domain.entity.PlayerAnswer;
 import com.fernando.carrotback.domain.repository.PlayerAnswerRepository;
