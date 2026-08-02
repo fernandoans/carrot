@@ -5,41 +5,32 @@ Uma aplicação muito próxima do "Kahoot", com QRCode, ranking em tempo real, c
 
 ## Tecnologias Usadas
 
-### Backend
-- Java 21 com Spring Boot
-	- Spring Web
-	- Spring WebSocket (tempo real)
-	- Spring Data JPA
-	- H2 Database
-	- Validation
-	- Lombok
+- Java 21 com Spring Boot 4.1.0
+ 	- Controllers MCV
+    - Spring Web
+    - Spring WebSocket (tempo real)
+    - Spring Data JPA
+    - H2 Database
+    - Lombok
 - Banco H2
 - JPA/Hibernate
-
-### Frontend
-- React.js com Vite
-	- react-router-dom
+- Thymeleaf (renderização)
+- HTMX (requisições AJAX)
 	- STOMP (Para comunicação em tempo real com Spring WebSocket)
-	- axios (Cliente HTTP)
-	- qrcode.react (exibir o QR Code de entrada dos jogadores)
-- HTML
-- CSS (Bootstrap 5)
+    - Bootstrap (Visual)
+
 
 ### Estrutura do Projeto
 
-A estrutura de pastas para o Backend/Frontend seguem o padrão Domain-Drive Design / Clean Architecture que propõe, para o Backend a divisão em 4 camadas definidas:
-
+A estrutura de pastas única seguem o padrão Domain-Drive Design / Clean Architecture que propõe, para o Backend a divisão em 4 camadas definidas:
 - application (componentes e services)
 - domain (model e repository)
 - infrastructure (classes de apoio ao projeto)
 - presentation (controles e DTOs)
 
-Para o Frontend:
-
-- context
-- pages
-- routes
-- services
+Pasta /resources
+- static (css e JS)
+- templates (páginas HTMX)
 
 Projeto ainda em Construção
 
@@ -66,6 +57,7 @@ Projeto ainda em Construção
 
 ### Fase 3
 - [x] Ativar o Cronômetro
+- [x] Complexidade exagerada com Rest.js
 - [ ] Entrar no jogo
 - [ ] Receber e mostrar a pergunta
 - [ ] Enviar a resposta do Aluno/Front
@@ -166,34 +158,21 @@ SHOW_RANKING
 GAME_FINISHED
 ```
 
-Serviço principal: GameTimeService
-
-### Entrar no Jogo
-```html
-POST /api/player
+# Entrar no Jogo
+Para resolver o fluxo sem bagunça e mantendo HTMX + STOMP (WebSocket) 
+no controle total, foi dividido os endpoints e visões em dois papéis claros:
 ```
-
-### Listar jogadores
-```html
-GET /api/player/all
-```
-
-### Abrir pergunta
-```html
-GET /api/game/open-question
-```
-
-### Responder pergunta
-```html
-POST /api/player/answer
-```
-
-### Fechar pergunta e obter ranking
-```html
-GET /api/game/finish-question
-```
-
-### Verificar se terminou
-```html
-GET /api/game/finish
+┌────────────────────────────────────────────────────┐
+│                    ESTADO DO JOGO                  │
+│ (Enum/Service no Spring: LOBBY, QUESTION, RANKING) │
+└──────────────────────┬─────────────────────────────┘
+                       │
+      ┌────────────────┴────────────────┐
+      ▼                                 ▼
+Visão 1: TELÃO / PROJETOR   Visão 2: CELULAR DO ALUNO
+(http://.../screen)         (http://.../player/join)
+- Exibe QR Code             - Digita Nome
+- Lista quem entrou         - Fica na tela de "Aguarde"
+- Mostra Pergunta/Opções    - Vê botões para responder
+- Mostra Ranking            - Vê resultado da sua resposta
 ```

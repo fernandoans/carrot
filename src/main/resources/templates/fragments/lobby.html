@@ -1,0 +1,68 @@
+<div th:fragment="content">
+    <div class="row g-4 align-items-stretch">
+        <div class="col-md-5">
+            <div class="panel-card text-center">
+                <h5 class="text-white mb-20">
+                    Escaneie para participar
+                </h5>
+                <div class="qr-container">
+                    <!-- É importante limpar a div caso o HTMX troque o fragmento novamente -->
+                    <div id="qrcode"></div>
+                    <div id="join-url"
+                         hx-trigger="load, every 2s"
+                         th:data-url="${joinUrl}"
+                         class="img-fluid">
+                        <span th:text="${joinUrl}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">
+                        Jogadores já conectados
+                    </h5>
+                </div>
+                <div class="player-list">
+                    <ul>
+                        <li th:each="player : ${players}"
+                            th:text="${player.name}">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-2">
+        <h4 class="text-white">
+            Aguardando o início do jogo...
+        </h4>
+    </div>
+
+    <!-- Script de inicialização do QRCode -->
+    <script>
+        (function renderQRCode() {
+            const qrContainer = document.getElementById("qrcode");
+            const urlElement = document.getElementById("join-url");
+
+            if (urlElement && qrContainer) {
+                const joinUrl = urlElement.dataset.url;
+
+                // Limpa o contêiner para não duplicar QRCodes em trocas do HTMX
+                qrContainer.innerHTML = "";
+
+                if (typeof QRCode !== "undefined") {
+                    new QRCode(qrContainer, {
+                        text: joinUrl,
+                        width: 300,
+                        height: 300,
+                    });
+                } else {
+                    console.error("A biblioteca QRCode.js ainda não foi carregada.");
+                }
+            }
+        })();
+    </script>
+</div>
