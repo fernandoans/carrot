@@ -15,6 +15,6 @@ public class PlayerAnswer {
 
     private Long idQuestion;
     private Byte answer;
-    private Integer timeAnswerInSeconds;
+    private Long timeAnswerInSeconds;
     private Boolean correct;
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrot</title>
+    <title>Carrot - Player</title>
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
 
     <link rel="stylesheet"
@@ -37,8 +37,10 @@
                         </span>
                     </div>
                 </div>
-                <div class="hero-card" id="hero-card" data-view="screen">
-                    <div th:replace="~{fragments/screen/default :: content}"></div>
+                <div class="hero-card" id="hero-card" data-view="player">
+                    <div th:replace="~{${content}}">
+                        <p>Carregando tela do jogador...</p>
+                    </div>
                 </div>
             </div>
         </div>

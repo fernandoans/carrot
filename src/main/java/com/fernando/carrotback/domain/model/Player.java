@@ -15,5 +15,5 @@ public class Player {
     private Long id;
 
     private String nickname;
-    private Integer score;
+    private Long score;
 }

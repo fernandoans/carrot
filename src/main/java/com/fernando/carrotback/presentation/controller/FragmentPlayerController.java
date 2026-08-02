@@ -10,44 +10,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/fragments")
-public class FragmentController {
+@RequestMapping("/frg/player")
+public class FragmentPlayerController {
 
     private final PlayerService playerService;
 
-    @GetMapping("/lobby")
-    public String lobby(Model model) {
-        model.addAttribute(
-            "players",
-            playerService.listar()
-        );
-        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-          .build()
-          .toUriString();
-        model.addAttribute(
-          "joinUrl",
-          baseUrl + "/join/player"
-        );
-        return "fragments/lobby :: content";
-    }
-
-    @GetMapping("/join/player")
-    public String player(Model model) {
-        return "fragments/player :: content";
-    }
-
     @GetMapping("/question")
     public String question(Model model) {
-        return "fragments/question :: content";
+        return "fragments/player/question :: content";
     }
 
     @GetMapping("/ranking")
     public String ranking(Model model) {
-        return "fragments/ranking :: content";
+        return "fragments/player/ranking :: content";
     }
 
     @GetMapping("/finished")
     public String finished(Model model) {
-        return "fragments/finished :: content";
+        return "fragments/player/finished :: content";
     }
 }

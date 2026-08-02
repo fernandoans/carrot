@@ -38,7 +38,7 @@ public class GameService {
     @Transactional
     public int processFileCsv(MultipartFile file) {
         int totQuestoes = 0;
-        String nome = this.validarArquivo(file);
+        String nomeArq = this.validarArquivo(file);
         // Limpar toda a base
         clearDatabase();
         // Carregar o arquivo CSV
@@ -56,7 +56,7 @@ public class GameService {
         if (totQuestoes == 0) {
             throw new RuntimeException("Nenhuma questão processada, verifique o arquivo!");
         }
-        this.startGame(nome, totQuestoes);
+        this.startGame(nomeArq, totQuestoes);
         cycleWaiting();
         // Send a trigger message to the index page via WebSocket topic
         return totQuestoes;
@@ -86,6 +86,22 @@ public class GameService {
           .toList();
     }
 
+    public GameStatus getCurrentState() {
+        Optional<Game> game = repository.findAll().stream().findFirst();
+        if (game.isPresent()) {
+            return game.get().getStatus();
+        }
+        return GameStatus.NOT_STARTED;
+    }
+
+    public Byte getCorrectAnswer() {
+        Optional<Game> game = repository.findAll().stream().findFirst();
+        if (game.isPresent()) {
+            return game.get().getCorrectAnswer();
+        }
+        return 0;
+    }
+
     private void clearDatabase() {
         repository.deleteAllInBatch();
         playerAnswerRepository.deleteAllInBatch();
@@ -113,6 +129,7 @@ public class GameService {
         entity.setTitle(titulo);
         entity.setTotalQuestions(totalQuestoes);
         entity.setActualQuestion(1L);
+        entity.setStatus(GameStatus.GAME_WAITING);
         repository.save(entity);
     }
 
@@ -120,11 +137,11 @@ public class GameService {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("Arquivo não informado.");
         }
-        String nome = file.getOriginalFilename();
-        if (nome == null || nome.isEmpty() || !nome.toLowerCase().endsWith(".csv")) {
+        String nomeArq = file.getOriginalFilename();
+        if (nomeArq == null || nomeArq.isEmpty() || !nomeArq.toLowerCase().endsWith(".csv")) {
             throw new IllegalArgumentException("O arquivo informado deve ser CSV.");
         }
-        return nome;
+        return nomeArq;
     }
 
     private void actualScores() {
@@ -135,7 +152,7 @@ public class GameService {
                 if (playerAnswer.getCorrect()) {
                     player.get().setScore(player.get().getScore() + (120 - playerAnswer.getTimeAnswerInSeconds()));
                 } else {
-                    player.get().setScore(player.get().getScore() - 120);
+                    player.get().setScore(player.get().getScore() - 60);
                 }
             }
         }
@@ -153,12 +170,22 @@ public class GameService {
     // CICLO DE VIDA
     // -----------------------------------------------------
 
+    private void atualizarStatus(GameStatus status) {
+        // Atualizar Status
+        Optional<Game> entity = repository.findAll().stream().findFirst();
+        if (entity.isPresent()) {
+            entity.get().setStatus(status);
+            repository.save(entity.get());
+        }
+    }
+
     private void cycleWaiting() {
         timeService.notifyAction(60*5, GameStatus.GAME_WAITING);
         timeService.startTimer(60*5, this::cycleOpenQuestion);
     }
 
     private void cycleOpenQuestion() {
+        atualizarStatus(GameStatus.QUESTION_STARTED);
         ResponseQuestionDTO questao = getQuestion(true);
         if (questao != null) {
             timeService.notifyAction(questao.tempoEmSegundos(), GameStatus.QUESTION_STARTED);
@@ -167,6 +194,7 @@ public class GameService {
     }
 
     private void cyclefinishQuestion() {
+        atualizarStatus(GameStatus.SHOW_RANKING);
         timeService.startTimer(30, this::nextStep);
         timeService.notifyAction(30, GameStatus.SHOW_RANKING);
     }
@@ -174,6 +202,7 @@ public class GameService {
     private void nextStep() {
         if (this.isFinished()) {
             timeService.notifyAction(0, GameStatus.GAME_FINISHED);
+            atualizarStatus(GameStatus.GAME_FINISHED);
         } else {
             cycleOpenQuestion();
         }

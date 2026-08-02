@@ -2,6 +2,7 @@ package com.fernando.carrotback.infrastructure.enums;
 
 public enum GameStatus {
     TEST("Testar a conexão"),
+    NOT_STARTED("Não iniciado"),
     GAME_WAITING("Aguardando Jogadores"),
     PLAYER_JOINED("Você se juntou ao jogo"),
     QUESTION_STARTED("Questão Iniciada"),

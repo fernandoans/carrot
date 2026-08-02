@@ -1,0 +1,21 @@
+<div th:fragment="content">
+    <form
+        hx-post="/player"
+        hx-ext="json-enc"
+        hx-target="#hero-card"
+        hx-swap="innerHTML"
+    >
+        <div class="panel-card text-center">
+            <h5 class="text-white mb-20">
+                Bem vindo, informe seu Nickname:
+            </h5>
+            <input
+                type="text"
+                class="form-control mt-3"
+                name="nickname"
+                required
+            />
+            <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+        </div>
+    </form>
+</div>

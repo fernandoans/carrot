@@ -1,5 +1,6 @@
 package com.fernando.carrotback.domain.model;
 
+import com.fernando.carrotback.infrastructure.enums.GameStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,4 +18,7 @@ public class Game {
     private String title;
     private Long actualQuestion;
     private Integer totalQuestions;
+    @Enumerated(EnumType.STRING)
+    private GameStatus status;
+    private Byte correctAnswer;
 }

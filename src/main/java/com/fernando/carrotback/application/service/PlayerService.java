@@ -1,5 +1,6 @@
 package com.fernando.carrotback.application.service;
 
+import com.fernando.carrotback.domain.repository.GameRepository;
 import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
 import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
 import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
@@ -19,11 +20,13 @@ public class PlayerService {
 
     private final PlayerRepository repository;
     private final PlayerAnswerRepository playerAnswerRepository;
+    private final GameService gameService;
+    private final GameTimeService gameTimeService;
 
     public ResponsePlayerDTO criar(RequestPlayerDTO player) {
         Player entity = new Player();
-        entity.setNickname(player.nome());
-        entity.setScore(0);
+        entity.setNickname(player.nickname());
+        entity.setScore(0L);
         return ResponsePlayerDTO.toResponse(repository.save(entity));
     }
 
@@ -41,8 +44,8 @@ public class PlayerService {
             PlayerAnswer answer = new PlayerAnswer();
             answer.setIdPlayer(entity.getId());
             answer.setAnswer(dto.resposta());
-            answer.setCorrect(dto.correta());
-            answer.setTimeAnswerInSeconds(dto.tempo());
+            answer.setCorrect(dto.resposta().equals(gameService.getCorrectAnswer()));
+            answer.setTimeAnswerInSeconds(gameTimeService.getElapsedSeconds());
             playerAnswerRepository.save(answer);
             return Boolean.TRUE;
         } catch (IllegalArgumentException e) {

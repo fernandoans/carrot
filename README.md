@@ -58,7 +58,7 @@ Projeto ainda em Construção
 ### Fase 3
 - [x] Ativar o Cronômetro
 - [x] Complexidade exagerada com Rest.js
-- [ ] Entrar no jogo
+- [x] Entrar no jogo
 - [ ] Receber e mostrar a pergunta
 - [ ] Enviar a resposta do Aluno/Front
 - [ ] Mostrar resultado atual (Ranking)
@@ -165,14 +165,21 @@ no controle total, foi dividido os endpoints e visões em dois papéis claros:
 ┌────────────────────────────────────────────────────┐
 │                    ESTADO DO JOGO                  │
 │ (Enum/Service no Spring: LOBBY, QUESTION, RANKING) │
-└──────────────────────┬─────────────────────────────┘
-                       │
-      ┌────────────────┴────────────────┐
-      ▼                                 ▼
-Visão 1: TELÃO / PROJETOR   Visão 2: CELULAR DO ALUNO
-(http://.../screen)         (http://.../player/join)
-- Exibe QR Code             - Digita Nome
-- Lista quem entrou         - Fica na tela de "Aguarde"
-- Mostra Pergunta/Opções    - Vê botões para responder
-- Mostra Ranking            - Vê resultado da sua resposta
+└───────────────────────────┬────────────────────────┘
+                            │
+             ┌──────────────┴────────────────┐
+             ▼                               ▼
+   Visão 1: SCREEN/PROJETOR    Visão 2: CELULAR DO ALUNO
+     (http://.../screen)        (http://.../player/join)
+   - Exibir QR Code             - Digitar Nickname
+   - Listar quem entrou         - Ficar na tela de "Aguarde"
+   - Mostrar Pergunta/Opções    - Ver botões para responder
+   - Mostrar Ranking Geral      - Ver resultado da sua resposta
+             │                               │
+             ▼                               ▼
+   Inscrito em: /topic/game       Inscrito em: /topic/game
+     (fragmentos/screen)             (fragmentos/player)
+             │                               │
+             ▼                               ▼
+     🖥️ Projetor (index.html)   📱 Celulares (player.html)
 ```

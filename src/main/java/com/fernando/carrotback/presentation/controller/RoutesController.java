@@ -16,4 +16,8 @@ public class RoutesController {
         return "index";
     }
 
+//    @GetMapping("/player/join")
+//    public String joinPlayer() {
+//        return "player";
+//    }
 }

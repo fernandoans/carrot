@@ -4,8 +4,8 @@ import com.fernando.carrotback.domain.model.Player;
 
 public record ResponsePlayerDTO(
   Long id,
-  String nome,
-  Integer pontuacao
+  String nickname,
+  Long pontuacao
 ) {
     public static ResponsePlayerDTO toResponse(Player entity) {
         return new ResponsePlayerDTO(

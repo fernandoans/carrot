@@ -9,7 +9,6 @@
                     <!-- É importante limpar a div caso o HTMX troque o fragmento novamente -->
                     <div id="qrcode"></div>
                     <div id="join-url"
-                         hx-trigger="load, every 2s"
                          th:data-url="${joinUrl}"
                          class="img-fluid">
                         <span th:text="${joinUrl}"></span>
@@ -25,10 +24,16 @@
                         Jogadores já conectados
                     </h5>
                 </div>
-                <div class="player-list">
-                    <ul>
-                        <li th:each="player : ${players}"
-                            th:text="${player.name}">
+                <div
+                    hx-trigger="load, every 10s"
+                    hx-get="/frg/screen/players"
+                    hx-swap="innerHTML"
+                    th:fragment="player-list"
+                    class="player-list">
+                    <ul class="list-group">
+                        <li class="list-group-item"
+                            th:each="player : ${players}"
+                            th:text="${player.nickname}">
                         </li>
                     </ul>
                 </div>

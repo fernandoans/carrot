@@ -1,18 +1,12 @@
 <div th:fragment="content">
     <form
-        hx-post="/api/player"
-        hx-ext="json-enc"
+            hx-post="/player/response"
+            hx-ext="json-enc"
     >
         <div class="panel-card text-center">
             <h5 class="text-white mb-20">
-                Bem vindo, informe seu nome:
+                Bem vindo, informe sua resposta:
             </h5>
-            <input
-                type="text"
-                class="form-control mt-3"
-                name="nome"
-                required
-            />
             <button type="submit" class="btn btn-primary mt-3">Enviar</button>
         </div>
     </form>
