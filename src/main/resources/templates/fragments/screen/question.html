@@ -1,5 +1,86 @@
-<div th:fragment="content" class="text-center">
-    <h4 class="fw-bold text-white mt-2 mb-2">
-        Questão XPTO
-    </h4>
+<div th:fragment="content" class="w-100">
+    <div class="row align-items-center mb-3">
+        <!-- Número da Questão / Indicador de Progresso -->
+        <div class="col-md-8 text-start">
+            <span class="badge bg-warning text-dark fs-6 mb-2">
+                Questão <span th:text="${question.ordem}">1</span> de <span th:text="${totalQuestions}">10</span>
+            </span>
+            <h2 class="display-6 fw-bold text-white mb-0" th:text="${question.descricao}">
+                Qual é a saída padrão do comando 'System.out.println()' em Java?
+            </h2>
+        </div>
+
+        <!-- Cronômetro de Contagem Regressiva da Questão -->
+        <div class="col-md-4 text-end">
+            <div class="timer-box bg-dark text-white p-3 rounded border border-secondary d-inline-block text-center">
+                <small class="text-uppercase text-muted d-block fw-bold">Tempo Restante</small>
+                <span id="question-timer"
+                      class="display-5 fw-bold text-warning"
+                      th:data-seconds="${question.tempoEmSegundos}"
+                      th:text="${question.tempoEmSegundos}">30</span><span class="fs-4 text-warning">s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Opções de Resposta (1, 2, 3 e 4) estilo Quiz/Kahoot -->
+    <div class="row g-3 mt-2">
+        <!-- Opção 1 -->
+        <div class="col-md-6">
+            <div class="panel-card option-card option-1 h-100 p-4 rounded d-flex align-items-center">
+                <div class="option-badge me-3 fs-3 fw-bold text-white bg-danger rounded-circle text-center">1</div>
+                <div class="fs-4 text-white fw-semibold" th:text="${question.pergunta1}">
+                    Opção 1
+                </div>
+            </div>
+        </div>
+
+        <!-- Opção 2 -->
+        <div class="col-md-6">
+            <div class="panel-card option-card option-2 h-100 p-4 rounded d-flex align-items-center">
+                <div class="option-badge me-3 fs-3 fw-bold text-white bg-primary rounded-circle text-center">2</div>
+                <div class="fs-4 text-white fw-semibold" th:text="${question.pergunta2}">
+                    Opção 2
+                </div>
+            </div>
+        </div>
+
+        <!-- Opção 3 -->
+        <div class="col-md-6">
+            <div class="panel-card option-card option-3 h-100 p-4 rounded d-flex align-items-center">
+                <div class="option-badge me-3 fs-3 fw-bold text-dark bg-warning rounded-circle text-center">3</div>
+                <div class="fs-4 text-white fw-semibold" th:text="${question.pergunta3}">
+                    Opção 3
+                </div>
+            </div>
+        </div>
+
+        <!-- Opção 4 -->
+        <div class="col-md-6">
+            <div class="panel-card option-card option-4 h-100 p-4 rounded d-flex align-items-center">
+                <div class="option-badge me-3 fs-3 fw-bold text-white bg-success rounded-circle text-center">4</div>
+                <div class="fs-4 text-white fw-semibold" th:text="${question.pergunta4}">
+                    Opção 4
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Inline para a Contagem Regressiva Visual na Tela -->
+    <script>
+        (function startQuestionTimer() {
+            const timerElement = document.getElementById("question-timer");
+            if (!timerElement) return;
+
+            let timeLeft = parseInt(timerElement.dataset.seconds, 10) || 30;
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    timerElement.innerText = timeLeft;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        })();
+    </script>
 </div>

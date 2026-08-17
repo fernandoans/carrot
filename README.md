@@ -59,14 +59,16 @@ Projeto ainda em Construção
 - [x] Ativar o Cronômetro
 - [x] Complexidade exagerada com Rest.js
 - [x] Entrar no jogo
-- [ ] Receber e mostrar a pergunta
-- [ ] Enviar a resposta do Aluno/Front
-- [ ] Mostrar resultado atual (Ranking)
+- [x] Receber e mostrar a pergunta
+- [x] Enviar a resposta do Aluno/Front
+- [x] Mostrar resultado atual (Ranking)
 
 ### Fase 4
-- [ ] Tela de Pontuação
-- [ ] Tela do Ranking Final
+- [x] Tela de Pontuação
+- [x] Tela do Ranking Final
+- [ ] Tela da Posição do Jogador
 - [ ] Exportar os resultados para CSV
+- [ ] Refinamentos e Testes
 
 ## Passos ao baixar o projeto
 

@@ -15,9 +15,4 @@ public class RoutesController {
     public String home() {
         return "index";
     }
-
-//    @GetMapping("/player/join")
-//    public String joinPlayer() {
-//        return "player";
-//    }
 }

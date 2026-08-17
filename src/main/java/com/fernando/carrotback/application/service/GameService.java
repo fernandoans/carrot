@@ -44,7 +44,8 @@ public class GameService {
         // Carregar o arquivo CSV
         try (BufferedReader reader = new BufferedReader(
           new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
-            String linha = reader.readLine(); // Retira a linha do cabeçalho
+            reader.readLine(); // Retira a linha do cabeçalho
+            String linha;
             while ((linha = reader.readLine()) != null) {
                 saveQuestion(linha.split(";"));
                 totQuestoes++;
@@ -69,8 +70,9 @@ public class GameService {
           .orElseThrow(() -> new NoSuchElementException("Questão não encontrada, verifique os dados!"));
         if (atualiza) {
             game.setActualQuestion(game.getActualQuestion() + 1);
-            repository.save(game);
         }
+        game.setCorrectAnswer(question.getCorrectAnswer());
+        repository.save(game);
         return ResponseQuestionDTO.toResponse(question);
     }
 
@@ -163,12 +165,20 @@ public class GameService {
     private boolean isFinished() {
         Game entity = repository.findAll().stream().findFirst()
           .orElseThrow(() -> new NoSuchElementException("Jogo não encontrado, verifique os dados!"));
-        return (entity.getActualQuestion() >= entity.getTotalQuestions());
+        return (entity.getActualQuestion() > entity.getTotalQuestions());
     }
 
     // -----------------------------------------------------
     // CICLO DE VIDA
     // -----------------------------------------------------
+
+    public Integer getTotalQuestions() {
+        Optional<Game> entity = repository.findAll().stream().findFirst();
+        if (entity.isPresent()) {
+            return entity.get().getTotalQuestions();
+        }
+        return 0;
+    }
 
     private void atualizarStatus(GameStatus status) {
         // Atualizar Status
@@ -179,14 +189,15 @@ public class GameService {
         }
     }
 
+    // TODO: Depois trocar para 5 mins
     private void cycleWaiting() {
         timeService.notifyAction(60*5, GameStatus.GAME_WAITING);
-        timeService.startTimer(60*5, this::cycleOpenQuestion);
+        timeService.startTimer(60*1, this::cycleOpenQuestion);
     }
 
     private void cycleOpenQuestion() {
         atualizarStatus(GameStatus.QUESTION_STARTED);
-        ResponseQuestionDTO questao = getQuestion(true);
+        ResponseQuestionDTO questao = getQuestion(false);
         if (questao != null) {
             timeService.notifyAction(questao.tempoEmSegundos(), GameStatus.QUESTION_STARTED);
             timeService.startTimer(questao.tempoEmSegundos(), this::cyclefinishQuestion);

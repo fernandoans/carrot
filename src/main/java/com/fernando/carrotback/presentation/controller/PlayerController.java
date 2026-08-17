@@ -4,14 +4,12 @@ import com.fernando.carrotback.application.service.GameService;
 import com.fernando.carrotback.infrastructure.enums.GameStatus;
 import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
 import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
-import com.fernando.carrotback.presentation.dto.ResponseMessageDTO;
 import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
 import com.fernando.carrotback.application.service.PlayerService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +23,6 @@ public class PlayerController {
 
     private final PlayerService service;
     private final GameService gameService;
-    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/join")
     public String joinPlayer(
@@ -53,10 +50,10 @@ public class PlayerController {
     public String register(
       @RequestBody @Valid RequestPlayerDTO request,
       HttpSession session,
-      Model model) {
+      Model model
+    ) {
         ResponsePlayerDTO player = service.criar(request);
         session.setAttribute("PLAYER_ID", player.id());
-
         // Retorna o fragmento HTML para esperar iniciar
         model.addAttribute("nickname", player.nickname());
         return "fragments/player/waiting :: content";
@@ -69,8 +66,17 @@ public class PlayerController {
     }
 
     @PostMapping("/answer")
-    @ResponseBody
-    public ResponseEntity<Boolean> sendAwnser(@RequestBody @Valid RequestAnswerDTO request) {
-        return ResponseEntity.ofNullable(service.sendAnswer(request));
+    public ResponseEntity<String> sendAnswer(@RequestBody @Valid RequestAnswerDTO request) {
+        boolean success = service.sendAnswer(request);
+        if (success) {
+            String htmlFeedback = """
+            <div class="alert alert-success mt-2 text-center role="alert">
+                <h5 class="fw-bold mb-0">Resposta Registrada! 🚀</h5>
+                <small>Aguarde a apuração na tela principal.</small>
+            </div>
+            """;
+            return ResponseEntity.ok(htmlFeedback);
+        }
+        return ResponseEntity.badRequest().body("<div class='alert alert-danger'>Erro ao enviar resposta.</div>");
     }
 }

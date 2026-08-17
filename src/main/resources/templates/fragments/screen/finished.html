@@ -1,5 +1,44 @@
-<div th:fragment="content" class="text-center">
-    <h4 class="fw-bold text-white mt-2 mb-2">
-        Terminei
-    </h4>
+<div th:fragment="content" class="w-100">
+    <!-- Cabeçalho com o status do jogo e o cronômetro do ranking (1 min) -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8 text-start">
+            <span class="badge bg-info text-dark fs-6 mb-2">Classificação Final</span>
+        </div>
+    </div>
+
+    <!-- Pódio Visual para os 3 Primeiros Colocados -->
+    <!-- CORREÇÃO: Uso de #lists.isEmpty() e #lists.size() -->
+    <div class="row g-3 justify-content-center align-items-end mb-4"
+         th:if="${players != null and not #lists.isEmpty(players)}">
+
+        <!-- 2º Lugar (Prata) -->
+        <div class="col-4 col-md-3 text-center" th:if="${#lists.size(players) >= 2}">
+            <div class="podium-card bg-secondary text-white p-3 rounded-top shadow border-top border-light">
+                <span class="fs-1 d-block mb-1">🥈</span>
+                <h5 class="fw-bold text-truncate mb-1" th:text="${players[1].nickname}">Jogador 2</h5>
+                <span class="badge bg-light text-dark fs-6" th:text="${players[1].pontos + ' pts'}">800 pts</span>
+            </div>
+            <div class="podium-base bg-secondary border-top border-secondary opacity-75" style="height: 90px;"></div>
+        </div>
+
+        <!-- 1º Lugar (Ouro - Mais alto) -->
+        <div class="col-4 col-md-4 text-center" th:if="${#lists.size(players) >= 1}">
+            <div class="podium-card bg-warning text-dark p-3 rounded-top shadow border-top border-white">
+                <span class="fs-1 d-block mb-1">👑</span>
+                <h4 class="fw-bold text-truncate mb-1" th:text="${players[0].nickname}">Jogador 1</h4>
+                <span class="badge bg-dark text-warning fs-5" th:text="${players[0].pontos + ' pts'}">1000 pts</span>
+            </div>
+            <div class="podium-base bg-warning opacity-75" style="height: 120px;"></div>
+        </div>
+
+        <!-- 3º Lugar (Bronze) -->
+        <div class="col-4 col-md-3 text-center" th:if="${#lists.size(players) >= 3}">
+            <div class="podium-card text-white p-3 rounded-top shadow border-top border-warning" style="background-color: #cd7f32;">
+                <span class="fs-1 d-block mb-1">🥉</span>
+                <h5 class="fw-bold text-truncate mb-1" th:text="${players[2].nickname}">Jogador 3</h5>
+                <span class="badge bg-light text-dark fs-6" th:text="${players[2].pontos + ' pts'}">600 pts</span>
+            </div>
+            <div class="podium-base opacity-75" style="background-color: #cd7f32; height: 60px;"></div>
+        </div>
+    </div>
 </div>

@@ -1,14 +1,10 @@
 package com.fernando.carrotback.presentation.controller;
 
-import com.fernando.carrotback.presentation.dto.ResponseQuestionDTO;
-import com.fernando.carrotback.presentation.dto.ResponseRankingDTO;
 import com.fernando.carrotback.application.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/game")
@@ -21,17 +17,14 @@ public class GameController {
     public ResponseEntity<String> uploadCsv(
       @RequestParam("file") MultipartFile file
     ) {
-        return ResponseEntity.ok(
-          "Arquivo carregado com " + service.processFileCsv(file) + " questões.");
-    }
+        int totalQuestoes = service.processFileCsv(file);
+        // Retornar uma mensagem HTML dentro da div #resultado-upload:
+        String htmlResposta = """
+            <div class="alert alert-success mt-3" role="alert">
+                Arquivo enviado com sucesso! Total de %d questões carregadas.
+            </div>
+            """.formatted(totalQuestoes);
 
-    @GetMapping("/question")
-    public ResponseEntity<ResponseQuestionDTO> getQuestion() {
-        return ResponseEntity.ofNullable(service.getQuestion(false));
-    }
-
-    @GetMapping("/ranking")
-    public ResponseEntity<List<ResponseRankingDTO>> getRanking() {
-        return ResponseEntity.ofNullable(service.getRanking());
+        return ResponseEntity.ok(htmlResposta);
     }
 }

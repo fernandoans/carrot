@@ -3,6 +3,7 @@ package com.fernando.carrotback.presentation.dto;
 import com.fernando.carrotback.domain.model.Question;
 
 public record ResponseQuestionDTO(
+  Long ordem,
   String descricao,
   String pergunta1,
   String pergunta2,
@@ -13,6 +14,7 @@ public record ResponseQuestionDTO(
 ) {
     public static ResponseQuestionDTO toResponse(Question entity) {
         return new ResponseQuestionDTO(
+          entity.getOrder(),
           entity.getDescription(),
           entity.getAnswer1(),
           entity.getAnswer2(),

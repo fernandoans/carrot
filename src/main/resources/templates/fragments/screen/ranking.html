@@ -1,5 +1,59 @@
-<div th:fragment="content" class="text-center">
-    <h4 class="fw-bold text-white mt-2 mb-2">
-        Ranking
-    </h4>
+<div th:fragment="content" class="w-100">
+    <!-- Cabeçalho com o status do jogo e o cronômetro do ranking (1 min) -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8 text-start">
+            <span class="badge bg-info text-dark fs-6 mb-2">Classificação Parcial</span>
+            <h2 class="display-5 fw-bold text-white mb-0">Placar da Rodada 🏆</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="timer-box bg-dark text-white p-3 rounded border border-secondary d-inline-block text-center">
+                <small class="text-uppercase text-muted d-block fw-bold">Próxima Questão</small>
+                <span id="ranking-timer" class="display-6 fw-bold text-info" data-seconds="60">60</span><span class="fs-5 text-info">s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela / Lista Geral com os Demais Colocados -->
+    <div class="panel-card p-3">
+        <h5 class="text-white mb-3 fw-bold">Classificação Geral</h5>
+        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                <tr class="text-muted">
+                    <th style="width: 10%;">#</th>
+                    <th style="width: 65%;">Jogador</th>
+                    <th class="text-end" style="width: 25%;">Pontuação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="player, iterStat : ${players}">
+                    <td class="fw-bold" th:text="${iterStat.count}">1</td>
+                    <td>
+                        <span class="fw-semibold text-white" th:text="${player.nickname}">Nickname</span>
+                    </td>
+                    <td class="text-end fw-bold text-warning" th:text="${player.pontos + ' pts'}">0 pts</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script Inline do Cronômetro Regressivo (1 minuto para visualização) -->
+    <script>
+        (function startRankingTimer() {
+            const timerElement = document.getElementById("ranking-timer");
+            if (!timerElement) return;
+
+            let timeLeft = parseInt(timerElement.dataset.seconds, 10) || 30;
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    timerElement.innerText = timeLeft;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        })();
+    </script>
 </div>

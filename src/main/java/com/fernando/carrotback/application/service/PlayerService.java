@@ -1,6 +1,5 @@
 package com.fernando.carrotback.application.service;
 
-import com.fernando.carrotback.domain.repository.GameRepository;
 import com.fernando.carrotback.presentation.dto.RequestAnswerDTO;
 import com.fernando.carrotback.presentation.dto.RequestPlayerDTO;
 import com.fernando.carrotback.presentation.dto.ResponsePlayerDTO;
@@ -40,6 +39,7 @@ public class PlayerService {
     public Boolean sendAnswer(RequestAnswerDTO dto) {
         Player entity = repository.findById(dto.idJogador())
           .orElseThrow(() -> new NoSuchElementException("Jogador não encontrado"));
+
         try {
             PlayerAnswer answer = new PlayerAnswer();
             answer.setIdPlayer(entity.getId());
