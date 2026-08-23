@@ -1,3 +1,4 @@
+ordem;pergunta;a;b;c;d;correta;tempo
 1;Qual componente de UI no Android é utilizado para exibir e permitir que o usuário digite ou edite textos?;Button;EditText;TextView;ImageView;2;40
 2;Qual componente de UI do Android é recomendado para exibir um texto estático e não editável na interface do aplicativo?;TextView;EditText;Button;CheckBox;1;40
 3;Qual componente de UI do Android é projetado especificamente para capturar a ação de clique do usuário e disparar um evento?;EditText;TextView;Button;Switch;3;40

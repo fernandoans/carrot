@@ -191,8 +191,9 @@ public class GameService {
 
     // TODO: Depois trocar para 5 mins
     private void cycleWaiting() {
-        timeService.notifyAction(60*5, GameStatus.GAME_WAITING);
-        timeService.startTimer(60*1, this::cycleOpenQuestion);
+        int tempoEspera = 60*3;
+        timeService.notifyAction(tempoEspera, GameStatus.GAME_WAITING);
+        timeService.startTimer(tempoEspera, this::cycleOpenQuestion);
     }
 
     private void cycleOpenQuestion() {
