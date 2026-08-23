@@ -1,0 +1,5 @@
+1;Qual método HTTP é utilizado para solicitar e recuperar dados de um servidor sem alterar ou modificar nenhum recurso?;GET;POST;PUT;DELETE;1;40
+2;Qual método HTTP deve ser utilizado quando a intenção é remover permanentemente um recurso específico do servidor?;PATCH;DELETE;UPDATE;GET;2;40
+3;Qual método HTTP é indicado para aplicar modificações ou atualizações parciais em um recurso existente?;POST;DELETE;PATCH;GET;3;40
+4;Qual método HTTP é comumente utilizado para criar um novo recurso ou enviar dados ao servidor para processamento?;GET;PATCH;DELETE;POST;4;40
+5;Qual método HTTP padrão é utilizado para substituir/atualizar completamente um recurso no servidor com as novas informações enviadas?;PUT;GET;DELETE;PATCH;1;40

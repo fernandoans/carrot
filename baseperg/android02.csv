@@ -1,0 +1,5 @@
+1;Qual componente de UI no Android é utilizado para exibir e permitir que o usuário digite ou edite textos?;Button;EditText;TextView;ImageView;2;40
+2;Qual componente de UI do Android é recomendado para exibir um texto estático e não editável na interface do aplicativo?;TextView;EditText;Button;CheckBox;1;40
+3;Qual componente de UI do Android é projetado especificamente para capturar a ação de clique do usuário e disparar um evento?;EditText;TextView;Button;Switch;3;40
+4;No desenvolvimento Android com Java, qual classe fundamental representa uma única tela e é responsável por gerenciar a interface do usuário e suas interações?;Activity;Service;BroadcastReceiver;ContentProvider;1;40
+5;Qual ferramenta do Android Studio permite simular e testar a execução de um aplicativo diretamente no computador criando um dispositivo virtual?;SDK;APK;AVD;Gradle;3;40

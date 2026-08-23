@@ -66,9 +66,9 @@ Projeto ainda em Construção
 ### Fase 4
 - [x] Tela de Pontuação
 - [x] Tela do Ranking Final
+- [x] Base de Perguntas reais para refinamentos e testes 
 - [ ] Tela da Posição do Jogador
 - [ ] Exportar os resultados para CSV
-- [ ] Refinamentos e Testes
 
 ## Passos ao baixar o projeto
 
