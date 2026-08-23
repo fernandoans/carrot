@@ -1,4 +1,6 @@
 ordem;pergunta;a;b;c;d;correta;tempo
-1;Capital do Brasil?;Rio;São Paulo;Brasília;Salvador;3;30
-2;2 + 2?;3;4;5;6;2;30
-3;Java é?;Banco;Linguagem;Sistema;Framework;2;30
+1;Qual método é o primeiro a ser chamado quando uma Activity é inicializada pela primeira vez?;onStart;onCreate;onResume;onRestart;2;40
+2;Qual método é chamado logo antes de a Activity ir para o primeiro plano e começar a interagir com o usuário?;onResume;onStart;onPause;onStop;1;40
+3;Qual método é invocado quando a Activity estava parada (invisível na tela) e está sendo trazida de volta à vida?;onCreate;onStart;onResume;onRestart;4;40
+4;Qual é o último método chamado antes de a Activity ser finalizada e completamente removida da memória?;onDestroy;onStop;onPause;onRestart;1;40
+5;Qual método é chamado assim que a Activity se torna visível para o usuário, mas ainda não está pronta para interação?;onCreate;onStart;onResume;onRestart;2;40
