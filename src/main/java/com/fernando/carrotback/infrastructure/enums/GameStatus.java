@@ -1,5 +1,7 @@
 package com.fernando.carrotback.infrastructure.enums;
 
+import lombok.Getter;
+
 public enum GameStatus {
     TEST("Testar a conexão"),
     NOT_STARTED("Não iniciado"),
@@ -9,13 +11,10 @@ public enum GameStatus {
     SHOW_RANKING("Mostrar Ranking"),
     GAME_FINISHED("Finalizado");
 
+    @Getter
     private final String mensagem;
 
-    private GameStatus(String mensagem) {
+    GameStatus(String mensagem) {
         this.mensagem = mensagem;
-    }
-
-    public String getMensagem() {
-        return mensagem;
     }
 }

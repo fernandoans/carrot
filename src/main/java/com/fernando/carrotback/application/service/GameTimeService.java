@@ -2,7 +2,6 @@ package com.fernando.carrotback.application.service;
 
 import com.fernando.carrotback.infrastructure.enums.GameStatus;
 import com.fernando.carrotback.presentation.dto.ResponseMessageDTO;
-import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -63,18 +62,6 @@ public class GameTimeService {
     }
 
     /**
-     * Retorna quantos segundos AINDA RESTAM para o fim da fase atual.
-     * Útil para alunos que conectam no meio da questão ou atualizam a página!
-     */
-    public long getRemainingSeconds() {
-        if (!isRunning.get()) {
-            return 0;
-        }
-        long remaining = totalDurationSeconds - getElapsedSeconds();
-        return Math.max(0, remaining);
-    }
-
-    /**
      * Interrompe/cancela o temporizador atual (caso o professor pule a questão, por exemplo).
      */
     public synchronized void stopTimer() {
@@ -82,13 +69,6 @@ public class GameTimeService {
             currentTask.cancel(true);
         }
         this.isRunning.set(false);
-    }
-
-    /**
-     * Verifica se existe um temporizador em execução.
-     */
-    public boolean isRunning() {
-        return isRunning.get();
     }
 
     /**
